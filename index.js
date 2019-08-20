@@ -3,6 +3,7 @@ const app = express()
 var bodyparser = require('body-parser')
 var cookieparser = require('cookie-parser')
 var path = require('path')
+var Produto = require('./modelo/produto')
 
 app.use(cookieparser());
 app.use(bodyparser.json());
@@ -25,13 +26,19 @@ app.get('/cadastro',function(req,res){
 })
 
 app.post('/cadastro', function(req,res){
-    res.render('index.ejs', 
-        {
-            id:"123",
-            marca:req.body.marca, 
-            tipo:req.body.tipo, 
-            cor:req.body.cor, 
-            preco:req.body.preco
+   var produto = new Produto({
+       marca:req.body.marca, 
+       tipo:req.body.tipo, 
+       cor:req.body.cor, 
+       preco:req.body.preco
+   })
+   produto.save(function(err){
+        if (err) {
+            res.render('',{ "msg": err})
         }
-    )
-})
+        else {
+            res.render('index.js', { "msg": 'Adicionado com sucesso' })
+        }
+   })
+   
+
